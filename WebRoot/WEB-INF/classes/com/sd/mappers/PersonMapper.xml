@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sd.mapper.PersonMapper">
+	<resultMap type="hashmap" id="all">
+		<id column="personid" property="aid"/>
+		<result column="name" property="name"/>
+		<result column="age" property="age"/>
+	</resultMap>
+
+	<select id="selectPersonById" resultType="person"  >
+		select * from Person where personId = #{id}
+	</select>
+	
+	<select id="selectPersons" resultType="person">
+		select * from Person
+	</select>
+	
+	<select id="countPersons" resultType="int">
+		select count(1) from Person
+	</select>
+	
+	<select id="selectPagePersons" resultType="person" >
+		select * from Person order by personId desc limit  #{curRecord,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} 
+	</select>
+	
+	<select id="findName" resultType="map" >
+		select personId as id,name as text from person 
+		<if test="_parameter != null">
+			where name  like CONCAT('%',#{_parameter},'%')
+		</if>
+		
+	</select>
+	
+	<select id="findNameByKeyWord" resultType="map" >
+		select personId as id,name as text from person 
+	</select>
+	
+	<insert id="addPerson" parameterType="person" >
+		insert into Person values (#{id},#{name},#{age},#{address})
+	</insert>
+	
+	<update id="updatePerson" parameterType="person">
+		update person set name=#{name},age=#{age},address=#{address} where personId=#{id}
+	</update>
+	
+	<delete id="deletePerson" parameterType="int">
+		delete from person where personId = #{id}
+	</delete>
+	
+	<select id="selectAll" resultMap="all" >
+		select * from person where personId=#{aid}
+	</select>
+	
+</mapper>
